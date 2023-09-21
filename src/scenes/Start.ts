@@ -1,4 +1,4 @@
-import { Container, Sprite, Text } from "pixi.js";
+import { AnimatedSprite, Assets, Container, Sprite, Text } from "pixi.js";
 import { IScene } from "./types";
 import { Manager } from "../Manager";
 
@@ -22,7 +22,15 @@ export class StartScene extends Container implements IScene {
         background.anchor.set(0.5);
         background.scale.set(2, 2);
 
+        const playerAnimations = Assets.cache.get('player').data.animations;
+        const player = AnimatedSprite.fromFrames(playerAnimations.playerIdle);
+        player.animationSpeed = 0.04;
+        player.position.x = Manager.width / 2;
+        player.position.y = Manager.height / 3;
+        player.play();
+
         this.addChild(background);
+        this.addChild(player);
         this.addChild(startText);
     }
 

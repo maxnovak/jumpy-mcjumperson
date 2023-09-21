@@ -12,6 +12,7 @@ export const manifest:ResolverManifest = {
                 "background_4": "./Hills Layer 04.png",
                 "background_5": "./Hills Layer 05.png",
                 "background_6": "./Hills Layer 06.png",
+                "player": "./Player.json",
             }
         }
     ]
