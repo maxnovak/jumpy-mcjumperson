@@ -1,0 +1,64 @@
+{
+    "frames": {
+        "idle1": {
+            "frame": { "x": 0, "y": 0, "w": 32, "h": 32 },
+            "sourceSize": { "w": 32, "h": 32 },
+            "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 }
+        },
+        "idle2": {
+            "frame": { "x": 32, "y": 0, "w": 32, "h": 32 },
+            "sourceSize": { "w": 32, "h": 32 },
+            "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 }
+        },
+        "run1": {
+            "frame": { "x": 0, "y": 96, "w": 32, "h": 32 },
+            "sourceSize": { "w": 32, "h": 32 },
+            "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 }
+        },
+        "run2": {
+            "frame": { "x": 32, "y": 96, "w": 32, "h": 32 },
+            "sourceSize": { "w": 32, "h": 32 },
+            "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 }
+        },
+        "run3": {
+            "frame": { "x": 64, "y": 96, "w": 32, "h": 32 },
+            "sourceSize": { "w": 32, "h": 32 },
+            "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 }
+        },
+        "run4": {
+            "frame": { "x": 96, "y": 96, "w": 32, "h": 32 },
+            "sourceSize": { "w": 32, "h": 32 },
+            "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 }
+        },
+        "run5": {
+            "frame": { "x": 128, "y": 96, "w": 32, "h": 32 },
+            "sourceSize": { "w": 32, "h": 32 },
+            "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 }
+        },
+        "run6": {
+            "frame": { "x": 160, "y": 96, "w": 32, "h": 32 },
+            "sourceSize": { "w": 32, "h": 32 },
+            "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 }
+        },
+        "run7": {
+            "frame": { "x": 192, "y": 96, "w": 32, "h": 32 },
+            "sourceSize": { "w": 32, "h": 32 },
+            "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 }
+        },
+        "run8": {
+            "frame": { "x": 224, "y": 96, "w": 32, "h": 32 },
+            "sourceSize": { "w": 32, "h": 32 },
+            "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 }
+        }
+    },
+    "meta": {
+		"image": "./Player.png",
+		"format": "RGBA8888",
+		"size": { "w": 256, "h": 288 },
+		"scale": "1"
+	},
+	"animations": {
+		"playerIdle": ["idle1", "idle2"],
+		"playerRun": ["run1", "run2", "run3", "run4", "run5", "run6", "run7", "run8"]
+	}
+}
