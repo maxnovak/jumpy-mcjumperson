@@ -15,8 +15,8 @@ export class Manager {
     }
 
     public static initialize(): void {
-        Manager._width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-        Manager._height = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+        Manager._width = 512*2;
+        Manager._height = 256*2;
 
         Manager.app = new Application({
             view: document.getElementById("pixi-canvas") as HTMLCanvasElement,
