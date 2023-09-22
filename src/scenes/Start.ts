@@ -1,7 +1,7 @@
 import { AnimatedSprite, Assets, Container, Sprite, Text } from "pixi.js";
 import { IScene, Location } from "./types";
 import { Manager } from "../Manager";
-import { Level1 } from "./Level1";
+import { Transition } from "./Transition";
 
 export class StartScene extends Container implements IScene {
     private player: AnimatedSprite;
@@ -71,7 +71,7 @@ export class StartScene extends Container implements IScene {
             this.player.position.y = newLocationY;
         }
         if (this.movePlayer && this.newLocation.x <= this.player.position.x && this.newLocation.y <= this.player.position.y) {
-            Manager.changeScene(new Level1());
+            Manager.changeScene(new Transition());
         }
     }
 }
