@@ -21,6 +21,7 @@ export class Level1 extends Container implements IScene {
     private layer4Velocity = 0;
     private layer5Velocity = 0;
     private player: AnimatedSprite;
+    private playerMoving = false;
 
     constructor() {
         super();
@@ -41,11 +42,12 @@ export class Level1 extends Container implements IScene {
         this.foreground = TilingSprite.from("background_6", {width: Manager.width, height: Manager.height});
         this.foreground.scale.set(2, 2);
 
-        const playerAnimations = Assets.cache.get('player').data.animations;
+        const playerAnimations = Assets.cache.get('player').data.animations; // Look at if better way to do this?
         this.player = AnimatedSprite.fromFrames(playerAnimations.playerIdle);
         this.player.animationSpeed = 0.08;
+        this.player.anchor.set(0.5,0.5);
         this.player.position.x = 50;
-        this.player.position.y = Manager.height - 62;
+        this.player.position.y = Manager.height - 46;
         this.player.play();
 
         this.addChild(this.background);
@@ -61,12 +63,24 @@ export class Level1 extends Container implements IScene {
     }
 
     private onKeyDown(e: KeyboardEvent): void {
+        if (this.playerMoving) {
+            return;
+        }
+
         if (e.key === "d" || e.key === "ArrowRight") {
             this.layer1Velocity = -background2Velocity;
             this.layer2Velocity = -background3Velocity;
             this.layer3Velocity = -background4Velocity;
             this.layer4Velocity = -groundVelocity;
             this.layer5Velocity = -foregroundVelocity;
+
+            const playerAnimations = Assets.cache.get('player').animations;
+            this.player.textures = playerAnimations.playerRun;
+            this.player.scale.x = 1;
+            this.player.play();
+
+            this.playerMoving = true;
+            return;
         }
         if (e.key === "a" || e.key === "ArrowLeft") {
             this.layer1Velocity = background2Velocity;
@@ -74,6 +88,14 @@ export class Level1 extends Container implements IScene {
             this.layer3Velocity = background4Velocity;
             this.layer4Velocity = groundVelocity;
             this.layer5Velocity = foregroundVelocity;
+
+            const playerAnimations = Assets.cache.get('player').animations;
+            this.player.textures = playerAnimations.playerRun;
+            this.player.scale.x = -1;
+            this.player.play();
+
+            this.playerMoving = true;
+            return;
         }
     }
 
@@ -84,6 +106,13 @@ export class Level1 extends Container implements IScene {
             this.layer3Velocity = 0;
             this.layer4Velocity = 0;
             this.layer5Velocity = 0;
+
+            const playerAnimations = Assets.cache.get('player').animations;
+            this.player.textures = playerAnimations.playerIdle;
+            this.player.play();
+
+            this.playerMoving = false;
+            return;
         }
     }
 

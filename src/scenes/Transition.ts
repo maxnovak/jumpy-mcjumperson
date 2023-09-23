@@ -53,8 +53,9 @@ export class Transition extends Container implements IScene {
         const playerAnimations = Assets.cache.get('player').data.animations;
         this.player = AnimatedSprite.fromFrames(playerAnimations.playerWalk);
         this.player.animationSpeed = 0.08;
+        this.player.anchor.set(0.5,0.5);
         this.player.position.x = -50;
-        this.player.position.y = Manager.height - 62;
+        this.player.position.y = Manager.height - 46;
         this.player.play();
 
 
