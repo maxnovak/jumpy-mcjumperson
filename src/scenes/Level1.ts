@@ -1,4 +1,4 @@
-import { Container, Sprite, TilingSprite } from "pixi.js";
+import { AnimatedSprite, Assets, Container, Sprite, TilingSprite } from "pixi.js";
 import { IScene } from "./types";
 import { Manager } from "../Manager";
 
@@ -20,6 +20,7 @@ export class Level1 extends Container implements IScene {
     private layer3Velocity = 0;
     private layer4Velocity = 0;
     private layer5Velocity = 0;
+    private player: AnimatedSprite;
 
     constructor() {
         super();
@@ -40,12 +41,19 @@ export class Level1 extends Container implements IScene {
         this.foreground = TilingSprite.from("background_6", {width: Manager.width, height: Manager.height});
         this.foreground.scale.set(2, 2);
 
+        const playerAnimations = Assets.cache.get('player').data.animations;
+        this.player = AnimatedSprite.fromFrames(playerAnimations.playerIdle);
+        this.player.animationSpeed = 0.08;
+        this.player.position.x = 50;
+        this.player.position.y = Manager.height - 62;
+        this.player.play();
 
         this.addChild(this.background);
         this.addChild(this.background2);
         this.addChild(this.background3);
         this.addChild(this.background4);
         this.addChild(this.ground);
+        this.addChild(this.player);
         this.addChild(this.foreground);
 
         document.addEventListener("keydown", this.onKeyDown.bind(this));

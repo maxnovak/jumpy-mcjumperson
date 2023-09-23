@@ -1,4 +1,4 @@
-import { Container, Sprite } from "pixi.js";
+import { AnimatedSprite, Assets, Container, Sprite } from "pixi.js";
 import { IScene } from "./types";
 import { Manager } from "../Manager";
 import { Level1 } from "./Level1";
@@ -10,6 +10,7 @@ export class Transition extends Container implements IScene {
     private layer3: Sprite;
     private layer4: Sprite;
     private layer5: Sprite;
+    private player: AnimatedSprite;
 
     constructor() {
         super();
@@ -49,6 +50,12 @@ export class Transition extends Container implements IScene {
         this.layer5.anchor.set(0.5);
         this.layer5.scale.set(2, 2);
         this.layer5.alpha = 0;
+        const playerAnimations = Assets.cache.get('player').data.animations;
+        this.player = AnimatedSprite.fromFrames(playerAnimations.playerWalk);
+        this.player.animationSpeed = 0.08;
+        this.player.position.x = -50;
+        this.player.position.y = Manager.height - 62;
+        this.player.play();
 
 
         this.addChild(this.background);
@@ -56,17 +63,23 @@ export class Transition extends Container implements IScene {
         this.addChild(this.layer2);
         this.addChild(this.layer3);
         this.addChild(this.layer4);
+        this.addChild(this.player);
         this.addChild(this.layer5);
     }
 
-    public update(): void {
-        this.layer1.alpha += 0.025;
-        this.layer2.alpha += 0.025;
-        this.layer3.alpha += 0.025;
-        this.layer4.alpha += 0.025;
-        this.layer5.alpha += 0.025;
-        if (this.layer1.alpha > 1) {
+    public update(framesPassed: number): void {
+        if (this.player.position.x > 50) {
             Manager.changeScene(new Level1());
-        };
+            return;
+        }
+        if (this.layer1.alpha < 1) {
+            this.layer1.alpha += 0.025;
+            this.layer2.alpha += 0.025;
+            this.layer3.alpha += 0.025;
+            this.layer4.alpha += 0.025;
+            this.layer5.alpha += 0.025;
+            return;
+        }
+        this.player.position.x += 1 * framesPassed;
     }
 }
