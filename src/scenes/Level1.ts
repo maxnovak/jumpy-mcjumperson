@@ -1,5 +1,5 @@
 import { AnimatedSprite, Assets, Container, Sprite, TilingSprite } from "pixi.js";
-import { IScene } from "./types";
+import { IScene, MoveType } from "./types";
 import { Manager } from "../Manager";
 
 const background2Velocity = 0.2;
@@ -21,6 +21,7 @@ export class Level1 extends Container implements IScene {
     private layer4Velocity = 0;
     private layer5Velocity = 0;
     private player: AnimatedSprite;
+    private playerVelocity = 0;
     private playerMoving = false;
 
     constructor() {
@@ -46,7 +47,7 @@ export class Level1 extends Container implements IScene {
         this.player = AnimatedSprite.fromFrames(playerAnimations.playerIdle);
         this.player.animationSpeed = 0.08;
         this.player.anchor.set(0.5,0.5);
-        this.player.position.x = 50;
+        this.player.position.x = 250;
         this.player.position.y = Manager.height - 46;
         this.player.play();
 
@@ -64,15 +65,24 @@ export class Level1 extends Container implements IScene {
 
     private onKeyDown(e: KeyboardEvent): void {
         if (this.playerMoving) {
+            if (this.player.position.x >= 774) {
+                this.playerVelocity = 0;
+                this.animateBackground("left")
+                return;
+            }
+            if (this.player.position.x <= 250) {
+                this.playerVelocity = 0;
+                this.animateBackground("right");
+            }
             return;
         }
 
         if (e.key === "d" || e.key === "ArrowRight") {
-            this.layer1Velocity = -background2Velocity;
-            this.layer2Velocity = -background3Velocity;
-            this.layer3Velocity = -background4Velocity;
-            this.layer4Velocity = -groundVelocity;
-            this.layer5Velocity = -foregroundVelocity;
+            if (this.player.position.x < 774) {
+                this.playerVelocity = 3;
+            } else {
+                this.animateBackground("left");
+            }
 
             const playerAnimations = Assets.cache.get('player').animations;
             this.player.textures = playerAnimations.playerRun;
@@ -83,11 +93,11 @@ export class Level1 extends Container implements IScene {
             return;
         }
         if (e.key === "a" || e.key === "ArrowLeft") {
-            this.layer1Velocity = background2Velocity;
-            this.layer2Velocity = background3Velocity;
-            this.layer3Velocity = background4Velocity;
-            this.layer4Velocity = groundVelocity;
-            this.layer5Velocity = foregroundVelocity;
+            if (this.player.position.x > 250) {
+                this.playerVelocity = -3;
+            } else {
+                this.animateBackground("right");
+            }
 
             const playerAnimations = Assets.cache.get('player').animations;
             this.player.textures = playerAnimations.playerRun;
@@ -100,12 +110,10 @@ export class Level1 extends Container implements IScene {
     }
 
     private onKeyUp(e: KeyboardEvent): void {
+        this.playerVelocity = 0;
+
         if (e.key === "d" || e.key === "ArrowRight" || e.key === "a" || e.key === "ArrowLeft") {
-            this.layer1Velocity = 0;
-            this.layer2Velocity = 0;
-            this.layer3Velocity = 0;
-            this.layer4Velocity = 0;
-            this.layer5Velocity = 0;
+            this.animateBackground("stop");
 
             const playerAnimations = Assets.cache.get('player').animations;
             this.player.textures = playerAnimations.playerIdle;
@@ -116,11 +124,36 @@ export class Level1 extends Container implements IScene {
         }
     }
 
+    private animateBackground(movementType: MoveType) {
+        if (movementType === "left") {
+            this.layer1Velocity = -background2Velocity;
+            this.layer2Velocity = -background3Velocity;
+            this.layer3Velocity = -background4Velocity;
+            this.layer4Velocity = -groundVelocity;
+            this.layer5Velocity = -foregroundVelocity;
+        }
+        if (movementType === "right") {
+            this.layer1Velocity = background2Velocity;
+            this.layer2Velocity = background3Velocity;
+            this.layer3Velocity = background4Velocity;
+            this.layer4Velocity = groundVelocity;
+            this.layer5Velocity = foregroundVelocity;
+        }
+        if (movementType === "stop") {
+            this.layer1Velocity = 0;
+            this.layer2Velocity = 0;
+            this.layer3Velocity = 0;
+            this.layer4Velocity = 0;
+            this.layer5Velocity = 0;
+        }
+    }
+
     public update(framesPassed: number): void {
         this.background2.tilePosition.x += this.layer1Velocity * framesPassed;
         this.background3.tilePosition.x += this.layer2Velocity * framesPassed;
         this.background4.tilePosition.x += this.layer3Velocity * framesPassed;
         this.ground.tilePosition.x += this.layer4Velocity * framesPassed;
         this.foreground.tilePosition.x += this.layer5Velocity * framesPassed;
+        this.player.position.x += this.playerVelocity * framesPassed;
     }
 }

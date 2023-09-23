@@ -69,7 +69,7 @@ export class Transition extends Container implements IScene {
     }
 
     public update(framesPassed: number): void {
-        if (this.player.position.x > 50) {
+        if (this.player.position.x > 250) {
             Manager.changeScene(new Level1());
             return;
         }
