@@ -43,7 +43,7 @@ export class Level1 extends Container implements IScene {
         this.foreground = TilingSprite.from("background_6", {width: Manager.width, height: Manager.height});
         this.foreground.scale.set(2, 2);
 
-        const playerAnimations = Assets.cache.get('player').data.animations; // Look at if better way to do this?
+        const playerAnimations = Assets.get('player').data.animations; // Look at if better way to do this?
         this.player = AnimatedSprite.fromFrames(playerAnimations.playerIdle);
         this.player.animationSpeed = 0.08;
         this.player.anchor.set(0.5,0.5);

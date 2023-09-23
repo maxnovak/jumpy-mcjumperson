@@ -3,5 +3,5 @@ import { LoaderScene } from './scenes/Loader';
 
 Manager.initialize();
 
-const loading: LoaderScene = new LoaderScene();
+const loading = new LoaderScene();
 Manager.changeScene(loading);

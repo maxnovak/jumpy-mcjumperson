@@ -32,7 +32,7 @@ export class StartScene extends Container implements IScene {
         background.anchor.set(0.5);
         background.scale.set(2, 2);
 
-        const playerAnimations = Assets.cache.get('player').data.animations;
+        const playerAnimations = Assets.get('player').data.animations;
         this.player = AnimatedSprite.fromFrames(playerAnimations.playerIdle);
         this.player.animationSpeed = 0.04;
         this.player.position.x = Manager.width / 2;

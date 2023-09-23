@@ -50,7 +50,7 @@ export class Transition extends Container implements IScene {
         this.layer5.anchor.set(0.5);
         this.layer5.scale.set(2, 2);
         this.layer5.alpha = 0;
-        const playerAnimations = Assets.cache.get('player').data.animations;
+        const playerAnimations = Assets.get('player').data.animations;
         this.player = AnimatedSprite.fromFrames(playerAnimations.playerWalk);
         this.player.animationSpeed = 0.08;
         this.player.anchor.set(0.5,0.5);
