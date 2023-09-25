@@ -1,6 +1,7 @@
 import { AnimatedSprite, Assets, Container, Sprite, TilingSprite } from "pixi.js";
 import { IScene, MoveType } from "./types";
 import { Manager } from "../Manager";
+import { isJump, isLeft, isRight } from "../utils";
 
 const background2Velocity = 0.2;
 const background3Velocity = 0.35;
@@ -68,7 +69,7 @@ export class Level1 extends Container implements IScene {
     private onKeyDown(e: KeyboardEvent): void {
         const playerAnimations = Assets.cache.get('player').animations;
 
-        if (e.key === " " && this.player.position.y >= 465) {
+        if (isJump(e.key) && this.player.position.y >= 465) {
             this.player.textures = playerAnimations.playerJumpUp;
             this.playerVelocityY = -3;
             this.player.loop = false;
@@ -89,7 +90,7 @@ export class Level1 extends Container implements IScene {
             return;
         }
 
-        if (e.key === "d" || e.key === "ArrowRight") {
+        if (isRight(e.key)) {
             if (this.player.position.x < 774) {
                 this.playerVelocityX = 3;
             } else {
@@ -102,7 +103,7 @@ export class Level1 extends Container implements IScene {
 
             this.playerMoving = true;
         }
-        if (e.key === "a" || e.key === "ArrowLeft") {
+        if (isLeft(e.key)) {
             if (this.player.position.x > 250) {
                 this.playerVelocityX = -3;
             } else {
@@ -118,7 +119,7 @@ export class Level1 extends Container implements IScene {
     }
 
     private onKeyUp(e: KeyboardEvent): void {
-        if (e.key === "d" || e.key === "ArrowRight" || e.key === "a" || e.key === "ArrowLeft") {
+        if (isRight(e.key) || isLeft(e.key)) {
             this.playerVelocityX = 0;
             this.animateBackground("stop");
 
