@@ -21,8 +21,10 @@ export class Level1 extends Container implements IScene {
     private layer4Velocity = 0;
     private layer5Velocity = 0;
     private player: AnimatedSprite;
-    private playerVelocity = 0;
+    private playerVelocityX = 0;
+    private playerVelocityY = 0;
     private playerMoving = false;
+    private playerJump = false;
 
     constructor() {
         super();
@@ -64,14 +66,24 @@ export class Level1 extends Container implements IScene {
     }
 
     private onKeyDown(e: KeyboardEvent): void {
+        const playerAnimations = Assets.cache.get('player').animations;
+
+        if (e.key === " " && this.player.position.y >= 465) {
+            this.player.textures = playerAnimations.playerJumpUp;
+            this.playerVelocityY = -3;
+            this.player.loop = false;
+            this.player.play();
+            this.playerJump = true;
+        }
+
         if (this.playerMoving) {
             if (this.player.position.x >= 774) {
-                this.playerVelocity = 0;
+                this.playerVelocityX = 0;
                 this.animateBackground("left")
                 return;
             }
             if (this.player.position.x <= 250) {
-                this.playerVelocity = 0;
+                this.playerVelocityX = 0;
                 this.animateBackground("right");
             }
             return;
@@ -79,40 +91,35 @@ export class Level1 extends Container implements IScene {
 
         if (e.key === "d" || e.key === "ArrowRight") {
             if (this.player.position.x < 774) {
-                this.playerVelocity = 3;
+                this.playerVelocityX = 3;
             } else {
                 this.animateBackground("left");
             }
 
-            const playerAnimations = Assets.cache.get('player').animations;
             this.player.textures = playerAnimations.playerRun;
             this.player.scale.x = 1;
             this.player.play();
 
             this.playerMoving = true;
-            return;
         }
         if (e.key === "a" || e.key === "ArrowLeft") {
             if (this.player.position.x > 250) {
-                this.playerVelocity = -3;
+                this.playerVelocityX = -3;
             } else {
                 this.animateBackground("right");
             }
 
-            const playerAnimations = Assets.cache.get('player').animations;
             this.player.textures = playerAnimations.playerRun;
             this.player.scale.x = -1;
             this.player.play();
 
             this.playerMoving = true;
-            return;
         }
     }
 
     private onKeyUp(e: KeyboardEvent): void {
-        this.playerVelocity = 0;
-
         if (e.key === "d" || e.key === "ArrowRight" || e.key === "a" || e.key === "ArrowLeft") {
+            this.playerVelocityX = 0;
             this.animateBackground("stop");
 
             const playerAnimations = Assets.cache.get('player').animations;
@@ -154,6 +161,19 @@ export class Level1 extends Container implements IScene {
         this.background4.tilePosition.x += this.layer3Velocity * framesPassed;
         this.ground.tilePosition.x += this.layer4Velocity * framesPassed;
         this.foreground.tilePosition.x += this.layer5Velocity * framesPassed;
-        this.player.position.x += this.playerVelocity * framesPassed;
+        this.player.position.x += this.playerVelocityX * framesPassed;
+        this.player.position.y += this.playerVelocityY * framesPassed;
+
+        if (this.player.position.y <= 400) {
+            this.playerVelocityY = 3;
+        }
+        if (this.player.position.y >= 465 && this.playerJump) {
+            this.playerJump = false;
+            this.playerVelocityY = 0;
+            const playerAnimations = Assets.cache.get('player').animations;
+            this.player.textures = playerAnimations.playerIdle;
+            this.player.play();
+            this.player.loop = true;
+        }
     }
 }

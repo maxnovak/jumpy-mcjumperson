@@ -121,6 +121,8 @@
 		"playerIdle": ["idle1", "idle2"],
 		"playerRun": ["run1", "run2", "run3", "run4", "run5", "run6", "run7", "run8"],
         "playerWalk": ["walk1", "walk2", "walk3", "walk4"],
+        "playerJumpUp": ["jump1", "jump2", "jump3", "jump4"],
+        "playerJumpDown": ["jump5", "jump6", "jump7", "jump8"],
         "playerJump": ["jump1", "jump2", "jump3", "jump4", "jump5", "jump6", "jump7", "jump8"]
 	}
 }
