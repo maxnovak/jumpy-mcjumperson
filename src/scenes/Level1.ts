@@ -52,6 +52,7 @@ export class Level1 extends Container implements IScene {
         this.player.anchor.set(0.5,0.5);
         this.player.position.x = 250;
         this.player.position.y = Manager.height - 46;
+        this.player.scale.set(1.5,1.5);
         this.player.play();
 
         this.addChild(this.background);
@@ -98,10 +99,11 @@ export class Level1 extends Container implements IScene {
             }
 
             this.player.textures = playerAnimations.playerRun;
-            this.player.scale.x = 1;
+            this.player.scale.x = 1.5;
             this.player.play();
 
             this.playerMoving = true;
+            return;
         }
         if (isLeft(e.key)) {
             if (this.player.position.x > 250) {
@@ -111,10 +113,11 @@ export class Level1 extends Container implements IScene {
             }
 
             this.player.textures = playerAnimations.playerRun;
-            this.player.scale.x = -1;
+            this.player.scale.x = -1.5;
             this.player.play();
 
             this.playerMoving = true;
+            return;
         }
     }
 
