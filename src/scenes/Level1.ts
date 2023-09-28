@@ -8,6 +8,12 @@ const background3Velocity = 0.35;
 const background4Velocity = 0.60;
 const groundVelocity = 0.85;
 const foregroundVelocity = 1.5;
+const runSpeed = 6;
+const rightLimit = 774;
+const leftLimit = 250;
+const fallSpeed = 3;
+const playerScale = 1.5;
+const slowDownSpeed = 1;
 
 export class Level1 extends Container implements IScene {
     private background: Sprite;
@@ -25,7 +31,7 @@ export class Level1 extends Container implements IScene {
     private playerVelocityX = 0;
     private playerVelocityY = 0;
     private playerMoving = false;
-    private playerJump = false;
+    private slowDown = false;
 
     constructor() {
         super();
@@ -49,10 +55,10 @@ export class Level1 extends Container implements IScene {
         const playerAnimations = Assets.get('player').data.animations; // Look at if better way to do this?
         this.player = AnimatedSprite.fromFrames(playerAnimations.playerIdle);
         this.player.animationSpeed = 0.08;
-        this.player.anchor.set(0.5,0.5);
+        this.player.anchor.set(0.5, 0.5);
         this.player.position.x = 250;
         this.player.position.y = Manager.height - 46;
-        this.player.scale.set(1.5,1.5);
+        this.player.scale.set(playerScale, playerScale);
         this.player.play();
 
         this.addChild(this.background);
@@ -68,52 +74,35 @@ export class Level1 extends Container implements IScene {
     }
 
     private onKeyDown(e: KeyboardEvent): void {
+        this.slowDown = false;
         const playerAnimations = Assets.cache.get('player').animations;
-
-        if (isJump(e.key) && this.player.position.y >= 465) {
+        if (isJump(e.key) && this.playerVelocityY === 0 && !e.repeat) {
             this.player.textures = playerAnimations.playerJumpUp;
-            this.playerVelocityY = -3;
+            this.player.animationSpeed = 0.2;
+            this.playerVelocityY = -runSpeed;
             this.player.loop = false;
             this.player.play();
-            this.playerJump = true;
-        }
-
-        if (this.playerMoving) {
-            if (this.player.position.x >= 774) {
-                this.playerVelocityX = 0;
-                this.animateBackground("left")
-                return;
-            }
-            if (this.player.position.x <= 250) {
-                this.playerVelocityX = 0;
-                this.animateBackground("right");
-            }
-            return;
         }
 
         if (isRight(e.key)) {
-            if (this.player.position.x < 774) {
-                this.playerVelocityX = 3;
-            } else {
-                this.animateBackground("left");
+            if (this.player.position.x < rightLimit) {
+                this.playerVelocityX = runSpeed;
             }
 
             this.player.textures = playerAnimations.playerRun;
-            this.player.scale.x = 1.5;
+            this.player.scale.x = playerScale;
             this.player.play();
 
             this.playerMoving = true;
             return;
         }
         if (isLeft(e.key)) {
-            if (this.player.position.x > 250) {
-                this.playerVelocityX = -3;
-            } else {
-                this.animateBackground("right");
+            if (this.player.position.x > leftLimit) {
+                this.playerVelocityX = -runSpeed;
             }
 
             this.player.textures = playerAnimations.playerRun;
-            this.player.scale.x = -1.5;
+            this.player.scale.x = -playerScale;
             this.player.play();
 
             this.playerMoving = true;
@@ -123,14 +112,12 @@ export class Level1 extends Container implements IScene {
 
     private onKeyUp(e: KeyboardEvent): void {
         if (isRight(e.key) || isLeft(e.key)) {
-            this.playerVelocityX = 0;
-            this.animateBackground("stop");
+            this.slowDown = true;
 
             const playerAnimations = Assets.cache.get('player').animations;
             this.player.textures = playerAnimations.playerIdle;
             this.player.play();
 
-            this.playerMoving = false;
             return;
         }
     }
@@ -168,14 +155,43 @@ export class Level1 extends Container implements IScene {
         this.player.position.x += this.playerVelocityX * framesPassed;
         this.player.position.y += this.playerVelocityY * framesPassed;
 
-        if (this.player.position.y <= 400) {
-            this.playerVelocityY = 3;
+        if (this.slowDown) {
+            if (this.playerVelocityX === 0) {
+                this.slowDown = false;
+                this.animateBackground("stop");
+                this.playerMoving = false;
+            }
+            if (this.playerVelocityX > 0) {
+                this.playerVelocityX += -slowDownSpeed;
+            }
+            if (this.playerVelocityX < 0) {
+                this.playerVelocityX += slowDownSpeed;
+            }
         }
-        if (this.player.position.y >= 465 && this.playerJump) {
-            this.playerJump = false;
+
+        if (this.playerMoving) {
+            if (this.player.position.x >= rightLimit) {
+                this.playerVelocityX = 0;
+                this.animateBackground("left")
+            }
+            if (this.player.position.x <= leftLimit) {
+                this.playerVelocityX = 0;
+                this.animateBackground("right");
+            }
+        }
+
+        if (this.player.position.y <= 400) {
+            this.playerVelocityY = fallSpeed;
+        }
+        if (this.playerVelocityY === fallSpeed && this.player.position.y >= 465) {
             this.playerVelocityY = 0;
             const playerAnimations = Assets.cache.get('player').animations;
-            this.player.textures = playerAnimations.playerIdle;
+            if (this.playerMoving) {
+                this.player.textures = playerAnimations.playerRun;
+            } else {
+                this.player.textures = playerAnimations.playerIdle;
+            }
+            this.player.animationSpeed = 0.08;
             this.player.play();
             this.player.loop = true;
         }
