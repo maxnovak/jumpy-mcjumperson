@@ -84,7 +84,7 @@ export class Level1 extends Container implements IScene {
             this.player.play();
         }
 
-        if (isRight(e.key)) {
+        if (isRight(e.key) && !e.repeat) {
             if (this.player.position.x < rightLimit) {
                 this.playerVelocityX = runSpeed;
             }
@@ -96,7 +96,7 @@ export class Level1 extends Container implements IScene {
             this.playerMoving = true;
             return;
         }
-        if (isLeft(e.key)) {
+        if (isLeft(e.key) && !e.repeat) {
             if (this.player.position.x > leftLimit) {
                 this.playerVelocityX = -runSpeed;
             }
@@ -172,7 +172,7 @@ export class Level1 extends Container implements IScene {
         if (this.playerMoving) {
             if (this.player.position.x >= rightLimit) {
                 this.playerVelocityX = 0;
-                this.animateBackground("left")
+                this.animateBackground("left");
             }
             if (this.player.position.x <= leftLimit) {
                 this.playerVelocityX = 0;
