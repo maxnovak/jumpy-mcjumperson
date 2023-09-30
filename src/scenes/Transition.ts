@@ -3,6 +3,8 @@ import { IScene } from "./types";
 import { Manager } from "../Manager";
 import { Level1 } from "./Level1";
 
+const playerScale = 1.5;
+
 export class Transition extends Container implements IScene {
     private background: Sprite;
     private layer1: Sprite;
@@ -56,6 +58,7 @@ export class Transition extends Container implements IScene {
         this.player.anchor.set(0.5,0.5);
         this.player.position.x = -50;
         this.player.position.y = Manager.height - 46;
+        this.player.scale.set(playerScale, playerScale);
         this.player.play();
 
 
